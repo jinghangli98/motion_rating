@@ -54,12 +54,11 @@ def print_rating(dcm_path):
         path = path[0].split('/')[:-1]
         path.insert(1, '/')
         path = os.path.join(*path)
-        pdb.set_trace()
         print(f'Coil: {ds.TransmitCoilName} | Patient: {ds.StudyDate}_{name} | Sex: {ds.PatientSex} | DOB: {ds.PatientBirthDate} | MR Sequence: {ds.ProtocolName} | Rating: {rating}')
         f.write(f'Coil: {ds.TransmitCoilName} | Patient: {ds.StudyDate}_{name} | Sex: {ds.PatientSex} | DOB: {ds.PatientBirthDate} | MR Sequence: {ds.ProtocolName} | Rating: {rating} | Path: {path}\n')
 
 if platform.system() == 'Linux':
-    dcm_path = f'/run/user/1000/gvfs/sftp:host=136.142.190.89/home/scans/{study}/20*'
+    dcm_path = f'/mnt/storinator/scans/{study}/20*'
 elif platform.system() == 'Darwin':
     dcm_path = f'/Volumes/storinator/scans/{study}/20*'
     
