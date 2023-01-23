@@ -1,4 +1,3 @@
-source activate pytorch
 studylist="studyList"
 for study in $(cat $studylist)
 do

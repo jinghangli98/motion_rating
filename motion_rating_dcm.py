@@ -8,9 +8,8 @@ import pydicom
 import platform
 import sys 
 import os
-
 study = sys.argv[1]
-
+# study = 'NOV-SCD'
 def crop(image, size):
     new_h, new_w = size
     h, w = image.shape
@@ -32,6 +31,7 @@ def crop(image, size):
 def print_rating(dcm_path):
     model = torch.load('motion_resnet18_model.pth')
     model.eval()
+    
     img_path = glob.glob(f'{dcm_path}/*/*TSE*_ND*/MR*')
     img_path.sort()
     subject_list = [i.split('/')[-3] for i in img_path]
@@ -54,14 +54,15 @@ def print_rating(dcm_path):
         path = path[0].split('/')[:-1]
         path.insert(1, '/')
         path = os.path.join(*path)
-        print(f'Coil: {ds.TransmitCoilName} | Patient: {name} | Sex: {ds.PatientSex} | DOB: {ds.PatientBirthDate} | MR Sequence: {ds.ProtocolName} | Rating: {rating}')
-        f.write(f'Coil: {ds.TransmitCoilName} | Patient: {name} | Sex: {ds.PatientSex} | DOB: {ds.PatientBirthDate} | MR Sequence: {ds.ProtocolName} | Rating: {rating} | Path: {path}\n')
+        pdb.set_trace()
+        print(f'Coil: {ds.TransmitCoilName} | Patient: {ds.StudyDate}_{name} | Sex: {ds.PatientSex} | DOB: {ds.PatientBirthDate} | MR Sequence: {ds.ProtocolName} | Rating: {rating}')
+        f.write(f'Coil: {ds.TransmitCoilName} | Patient: {ds.StudyDate}_{name} | Sex: {ds.PatientSex} | DOB: {ds.PatientBirthDate} | MR Sequence: {ds.ProtocolName} | Rating: {rating} | Path: {path}\n')
 
 if platform.system() == 'Linux':
     dcm_path = f'/run/user/1000/gvfs/sftp:host=136.142.190.89/home/scans/{study}/20*'
 elif platform.system() == 'Darwin':
-    dcm_path = '/Volumes/storinator/scans/MAN-IBR/20*'
-
+    dcm_path = f'/Volumes/storinator/scans/{study}/20*'
+    
 print_rating(dcm_path)
     
 # model = torch.load('motion_resnet18_model.pth')
